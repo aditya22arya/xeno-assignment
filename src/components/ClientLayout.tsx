@@ -12,7 +12,7 @@ export default function ClientLayout({ children }: { children: React.ReactNode }
   return (
     <>
       {!hideNav && <Navbar />}
-      <main className={!hideNav ? "pt-12" : ""}>
+      <main className={!hideNav && pathname !== "/" ? "pt-12" : ""}>
         {children}
       </main>
       {!hideFoot && <Footer/>}
