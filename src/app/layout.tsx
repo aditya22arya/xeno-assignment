@@ -18,7 +18,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Smart-Sphere",
+  title: "XENO CRM",
   description: "Intelligent customer relationship management platform for the Xeno SDE Internship Assignment",
 }
 

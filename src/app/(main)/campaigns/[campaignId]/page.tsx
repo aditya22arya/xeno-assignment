@@ -34,11 +34,32 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion"
 import { useRouter } from "next/navigation"
 import { useSession } from "next-auth/react"
-async function fetchCampaignDetails(id: string): Promise<{ campaign: ICampaign | null; logs: ICommunicationLog[] }> {
+import { CampaignMetrics } from "@/components/analytics/CampaignMetrics"
+import { ExportButtons } from "@/components/analytics/ExportButtons"
+async function fetchCampaignDetails(id: string): Promise<{
+  campaign: ICampaign | null;
+  logs: ICommunicationLog[];
+  analytics: {
+    metrics: {
+      total: number;
+      delivered: number;
+      failed: number;
+      pending: number;
+    };
+    timeline: Array<{
+      date: string;
+      delivered: number;
+      failed: number;
+    }>;
+  };
+}> {
   console.log(`Frontend: Fetching details for campaign ${id}`)
   try {
-    const campaignRes = await fetch(`/api/campaigns/${id}`)
-    const logsRes = await fetch(`/api/campaigns/${id}/logs`)
+    const [campaignRes, logsRes, analyticsRes] = await Promise.all([
+      fetch(`/api/campaigns/${id}`),
+      fetch(`/api/campaigns/${id}/logs`),
+      fetch(`/api/campaigns/${id}/analytics`)
+    ]);
 
     if (!campaignRes.ok) {
       const errorData = await campaignRes.json().catch(() => ({ message: "Failed to fetch campaign details" }))
@@ -48,10 +69,22 @@ async function fetchCampaignDetails(id: string): Promise<{ campaign: ICampaign |
       const errorData = await logsRes.json().catch(() => ({ message: "Failed to fetch campaign logs" }))
       throw new Error(errorData.message)
     }
+    if (!analyticsRes.ok) {
+      const errorData = await analyticsRes.json().catch(() => ({ message: "Failed to fetch analytics" }))
+      throw new Error(errorData.message)
+    }
 
-    const campaignData = await campaignRes.json()
-    const logsData = await logsRes.json()
-    return { campaign: campaignData.campaign, logs: logsData.logs }
+    const [campaignData, logsData, analyticsData] = await Promise.all([
+      campaignRes.json(),
+      logsRes.json(),
+      analyticsRes.json()
+    ]);
+
+    return {
+      campaign: campaignData.campaign,
+      logs: logsData.logs,
+      analytics: analyticsData
+    }
   } catch (error: any) {
     console.error(`Frontend: Error in fetchCampaignDetails for ${id}:`, error)
     throw error
@@ -70,6 +103,19 @@ export default function CampaignDetailPage() {
   const [searchQuery, setSearchQuery] = useState("")
   const [statusFilter, setStatusFilter] = useState("ALL")
   const [isRefreshing, setIsRefreshing] = useState(false)
+  const [analytics, setAnalytics] = useState<{
+    metrics: {
+      total: number;
+      delivered: number;
+      failed: number;
+      pending: number;
+    };
+    timeline: Array<{
+      date: string;
+      delivered: number;
+      failed: number;
+    }>;
+  } | null>(null)
   const { data: session, status } = useSession();
   
     useEffect(() => {
@@ -90,9 +136,10 @@ export default function CampaignDetailPage() {
       if (showLoadingSpinner) setIsLoading(true)
       setIsRefreshing(true)
       try {
-        const { campaign: campaignData, logs: logsData } = await fetchCampaignDetails(campaignId)
+        const { campaign: campaignData, logs: logsData, analytics: analyticsData } = await fetchCampaignDetails(campaignId)
         setCampaign(campaignData)
         setLogs(logsData)
+        setAnalytics(analyticsData)
         if (!campaignData) {
           toast.error("Campaign not found.")
         }
@@ -341,6 +388,7 @@ export default function CampaignDetailPage() {
           <Tabs defaultValue="details" className="w-full">
             <TabsList className="mb-4">
               <TabsTrigger value="details">Campaign Details</TabsTrigger>
+              <TabsTrigger value="analytics">Analytics</TabsTrigger>
               <TabsTrigger value="logs">Communication Logs</TabsTrigger>
               <TabsTrigger value="insights">AI Insights</TabsTrigger>
             </TabsList>
@@ -471,6 +519,36 @@ export default function CampaignDetailPage() {
                         </Card>
                       ))}
                     </div>
+                  )}
+                </CardContent>
+              </Card>
+            </TabsContent>
+
+            <TabsContent value="analytics" className="mt-0 space-y-6">
+              <Card>
+                <CardHeader>
+                  <CardTitle className="text-xl">Campaign Analytics</CardTitle>
+                  <CardDescription>Detailed metrics and performance analysis</CardDescription>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  {analytics && (
+                    <>
+                      <CampaignMetrics data={{
+                        ...analytics.metrics,
+                        timeline: analytics.timeline
+                      }} />
+                      <div className="mt-6">
+                        <h3 className="text-lg font-semibold mb-4">Export Reports</h3>
+                        <ExportButtons
+                          campaignData={{
+                            name: campaign?.name || "",
+                            status: campaign?.status || "UNKNOWN",
+                            metrics: analytics.metrics,
+                            timeline: analytics.timeline,
+                          }}
+                        />
+                      </div>
+                    </>
                   )}
                 </CardContent>
               </Card>

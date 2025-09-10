@@ -22,6 +22,7 @@ export function Navbar() {
   const mainPages = [
     { href: "/audiences", label: "Audiences" },
     { href: "/campaigns", label: "Campaigns" },
+    { href: "/ai-tools", label: "AI Tools" },
     { href: "/ingest-data", label: "Ingest Data" },
     { href: "/api-docs", label: "API Documentation" },
   ];

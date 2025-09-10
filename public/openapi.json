@@ -1,9 +1,9 @@
 {
     "openapi": "3.0.0",
     "info": {
-      "title": "Smart-Sphere CRM  API",
+      "title": "Xeno CRM API",
       "version": "1.0.0",
-      "description": "API for Smart-Sphere CRM platform, including audience management, campaigns, AI tools, and more."
+      "description": "API for Xeno CRM platform, including audience management, campaigns, AI tools, and more."
     },
     "tags": [
       { "name": "AI", "description": "AI-powered tools for marketing." },

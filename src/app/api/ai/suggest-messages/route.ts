@@ -84,7 +84,7 @@ Please generate ${messageCount} message suggestions with a ${tone} tone.`;
           content: userPrompt,
         },
       ],
-      model: "llama3-8b-8192", // Or "mixtral-8x7b-32768"
+      model: "llama-3.1-8b-instant", // Or "mixtral-8x7b-32768"
       temperature: 0.7, // Higher temperature for more creative message suggestions
       // response_format: { type: "json_object" }, // If model supports it and if you structure prompt to ask for {"suggestions": ["msg1", "msg2"]}
     });

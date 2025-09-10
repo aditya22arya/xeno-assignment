@@ -33,7 +33,7 @@ export function Footer() {
           </div>
 
           <div className="text-sm text-muted-foreground">
-            Powered by Groq API (Fast AI Inference) • © {new Date().getFullYear()} Smart-Sphere • Made with ❤️ by Aditya Arya
+            Powered by Groq API (Fast AI Inference) • © {new Date().getFullYear()} XENO CRM • Made with ❤️ by Aditya Arya
           </div>
         </div>
       </div>
