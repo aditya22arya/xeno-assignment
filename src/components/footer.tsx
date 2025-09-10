@@ -14,7 +14,7 @@ export function Footer() {
           {/* Social Links */}
           <div className="flex space-x-6">
             <Link
-              href="https://github.com/AnshJain9159/Xeno-Assignment"
+              href="https://github.com/aditya22arya/xeno-assignment"
               target="_blank"
               rel="noopener noreferrer"
               className="text-muted-foreground hover:text-primary transition-colors"
