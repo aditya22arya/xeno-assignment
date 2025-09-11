@@ -58,8 +58,9 @@ MONGODB_URI=your-mongodb-connection-string
 
 # Upstash Redis (for rate limiting)
 UPSTASH_REDIS_REST_URL=your-upstash-redis-url
+
+
 UPSTASH_REDIS_REST_TOKEN=your-upstash-redis-token
-\`\`\`
 
 ## Getting Started
 
