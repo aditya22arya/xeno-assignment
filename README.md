@@ -21,7 +21,7 @@ A modern campaign management system built with Next.js 15, featuring user authen
 
 ## Tech Stack
 
-- **Frontend**: Next.js 15, React 18, TailwindCSS
+- **Frontend**: Next.js 15, TailwindCSS
 - **Backend**: Next.js API Routes
 - **Database**: MongoDB with Mongoose
 - **Authentication**: NextAuth.js v5
