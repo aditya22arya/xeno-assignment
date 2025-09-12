@@ -56,7 +56,7 @@ GOOGLE_CLIENT_SECRET=your-google-client-secret
 # MongoDB
 MONGODB_URI=your-mongodb-connection-string
 
-# Upstash Redis (for rate limiting)
+#  Redis (for rate limiting)
 UPSTASH_REDIS_REST_URL=your-upstash-redis-url
 
 
